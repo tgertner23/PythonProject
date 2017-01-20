@@ -1,6 +1,6 @@
 
 import random
-
+random.seed(3456)
 roulette_tables=2
 craps_tables=2
 barmen=1
@@ -21,21 +21,22 @@ class Customer(object):
         print(self.name)
 
 class Returner(Customer):
-
-    def chips(self):
-        self.chips = random.randint(100, 300)
-        return (self.chips)
+    @property
+    def asschips(self):
+        chips = random.randint(100, 300)
+        return(chips)
 
 class New(Customer):
-
-    def chips(self):
-        self.chips = random.randint(200,300)
-        return(self.chips)
+    @property
+    def asschips(self):
+        chips = random.randint(200,300)
+        return(chips)
 
 class Bachelor(Customer):
-    def chips(self):
-        self.chips = random.randint(200,500)+freebudget
-        return(self.chips)
+    @property
+    def asschips(self):
+        chips = random.randint(200,500)+freebudget
+        return(chips)
 
 class Casino(object):
     def __init__(self,id):
@@ -81,6 +82,7 @@ for i in range(0,ncust):
 '''
 
 playerlist=[]
+ptype=[]
 for i in range(0,10):
     playerlist.append("Player"+str(i+1))
 
@@ -91,9 +93,18 @@ for i in range(ncust):
 
     if rando<6:
         playerlist[i]=Returner(str(playerlist[i]))
+        ptype.append("R")
     elif rando==7:
         playerlist[i] = Bachelor(str(playerlist[i]))
+        ptype.append("B")
     else:
         playerlist[i] = New(str(playerlist[i]))
+        ptype.append("N")
 
-print(playerlist[0].chips)
+cashcash=[]
+for i in range(0,10):
+    cashcash.append(playerlist[i].asschips)
+
+print(cashcash)
+print(ptype)
+
