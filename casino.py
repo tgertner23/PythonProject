@@ -41,11 +41,7 @@ class Bachelor(Customer):
 class Casino(object):
     def __init__(self,id):
         self.id = id
-    '''def money(self):
-        if day == 1:
-            casinomoney=casinostartcash
-        else:
-            casinomoney += casinowinnings'''
+
 
 class Employee(object):
     def __init__(self,name):
@@ -107,4 +103,3 @@ for i in range(0,10):
 
 print(cashcash)
 print(ptype)
-
