@@ -1,7 +1,6 @@
-
 import random
 import craps
-import Roulette
+
 
 
 
@@ -78,7 +77,6 @@ for i in range(0,ncust):
         customers.append(New(str(i)))
     else:
         customers.append(Returner(str(i)))
-
 '''
 def CreatePlayers(nplayers):
     playerlist=[]
@@ -146,6 +144,14 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
                 else:
                     drinksorders[i] +=0
             currentaction = [random.choice(choice) for i in range (0,len(plist))]
+            tablechoice=[]
+            for i in range(0,len(currentaction)):
+                if currentaction[i]=="Roulette":
+                    tablechoice.append(random.randint(1,roulette_tables))
+                elif currentaction[i]=="Craps":
+                    tablechoice.append(random.randint(1,craps_tables))
+                else:
+                    tablechoice.append(0)
             #roulette action
             Rminbet = random.choice(RMinchoices)
             rwager=[]
@@ -189,22 +195,27 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
                 else:
                     rguess.append(37)
                     cguess.append(random.randint(2,12))
-            Rcorrectnumber = random.randint(0, 36)
+            Rcorrectnumber=[]
+            for i in range(0,roulette_tables):
+                Rcorrectnumber.append(random.randint(0,36))
             Rplayermoneychanges = []
             Rcasinomoneychanges = []
             for i in range(0, len(rguess)):
-                if rguess[i] == Rcorrectnumber and rwager[i] >= Rminbet:
+                if rguess[i] == Rcorrectnumber[tablechoice[i]-1] and rwager[i] >= Rminbet:
                     Rplayermoneychanges.append(30 * rwager[i])
                     Rcasinomoneychanges.append(0)
                 else:
                     Rplayermoneychanges.append(0)
                     Rcasinomoneychanges.append(rwager[i])
             CasinoRouletteEarn=sum(Rcasinomoneychanges)
-            Ccorrectnumber = random.randint(1,6)+random.randint(1,6)
+            Ccorrectnumber=[]
+            for i in range(0,craps_tables):
+                dicerolled=random.randint(1,6)+random.randint(1,6)
+                Ccorrectnumber.append(dicerolled)
             Cplayermoneychanges = []
             Ccasinomoneychanges = []
             for i in range(0,len(cguess)):
-                if cguess[i]== Ccorrectnumber and cwager[i] >= Cminbet:
+                if cguess[i]== Ccorrectnumber[tablechoice[i]-1] and cwager[i] >= Cminbet:
                     Cplayermoneychanges.append(craps.payouts(Ccorrectnumber)*cwager[i])
                     Ccasinomoneychanges.append(0)
                 else:
