@@ -1,6 +1,6 @@
 import random
 import craps
-
+from matplotlib import pyplot as plt
 
 
 
@@ -104,7 +104,6 @@ def PlayerChips(listofplayers):
         cashcash.append(listofplayers[i].asschips)
     return(cashcash)
 
-simulations = 5
 RMinchoices=[50,100,200]
 CMinchoices=[0,25,50]
 
@@ -114,6 +113,7 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
     nemployees=nroulette+ncraps
     endlossfromp=0
     casinocash=casinoday1cash
+    casinocashvector=[]
     for i in range(0,nights):
         plist=CreatePlayers(pnumber)
         playertypes=PlayerType(plist)
@@ -227,19 +227,23 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
             for i in range(0,len(plist)):
                 PlayerMoney[i] += Rplayermoneychanges[i]
                 PlayerMoney[i] += Cplayermoneychanges[i]
-
         endplayermoney=sum(PlayerMoney)
         playerprofit = endplayermoney-Playerchipsamount
         endlossfromp += playerprofit
         costofbartenders=200* nbartend
         casinocash -= costofbartenders
+        casinocashvector.append(casinocash)
     casinocash -=endlossfromp
     casinocashprofit = casinocash-casinoday1cash
     employeeearnings = 0.005*casinocashprofit*nemployees
     casinocashprofit -= employeeearnings
-    return(casinocashprofit)
+    return(casinocashvector)
 
 
 
 test = CasinoSimulation(1000,ncust,casinostartcash,barmen,roulette_tables,craps_tables)
 print(test)
+
+x_series = [i for i in range(0,1000)]
+plt.plot(x_series,test)
+plt.show()
