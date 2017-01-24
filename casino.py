@@ -1,9 +1,11 @@
 import random
 import craps
 from matplotlib import pyplot as plt
+import numpy
 
 
 
+Nights=1000
 roulette_tables=10
 craps_tables=10
 barmen=4
@@ -41,57 +43,22 @@ class Bachelor(Customer):
         chips = random.randint(200,500)+freebudget
         return(chips)
 
-class Casino(object):
-    def __init__(self,id):
-        self.id = id
-
-
-class Employee(object):
-    def __init__(self,name):
-        self.name = name
-class Bartender(Employee):
-
-    def fixed_wage(self):
-        self.fixed_wage=bartender_wage
-        return(bartender_wage)
-    #def tips(self):
-
-class Dealer(Employee):
-
-    """def dealerwage(self):
-        self.dealerwage"""
-
-
-
-
-'''george = Returner("george")
-george.description()
-print(george.chips())'''
-
-'''customers=[]
-for i in range(0,ncust):
-    numero=random.randint(1,10)
-    if numero==1:
-        customers.append(Bachelor(str(i)))
-    elif numero>1 and numero<6:
-        customers.append(New(str(i)))
-    else:
-        customers.append(Returner(str(i)))
-'''
 def CreatePlayers(nplayers):
     playerlist=[]
     for i in range(0,nplayers):
         playerlist.append("Player"+str(i+1))
     return(playerlist)
 def PlayerType(listofplayers):
+    rnumb=pctreturn*100
+    bnumb=pctbach*100
     ptype = []
     for i in range(0, len(listofplayers)):
-        rando=random.randint(1,10)
+        rando=random.randint(1,100)
 
-        if rando<6:
+        if rando<rnumb:
             listofplayers[i]=Returner(str(listofplayers[i]))
             ptype.append("R")
-        elif rando==7:
+        elif rando>(100-bnumb):
             listofplayers[i] = Bachelor(str(listofplayers[i]))
             ptype.append("B")
         else:
@@ -109,11 +76,15 @@ CMinchoices=[0,25,50]
 
 
 
-def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
+def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps,returntype):
+    totaltips=0
     nemployees=nroulette+ncraps
     endlossfromp=0
     casinocash=casinoday1cash
     casinocashvector=[]
+    crapsprofit=0
+    rouletteprofit=0
+    purchaseddrinks=0
     for i in range(0,nights):
         plist=CreatePlayers(pnumber)
         playertypes=PlayerType(plist)
@@ -121,7 +92,7 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
         casinocash -= (freebudget*numbachelors)
         PlayerMoney = PlayerChips(plist)
         Playerchipsamount=sum(PlayerMoney)
-        actionspernight = 12
+        actionspernight = 25
         choice = ["Roulette", "Craps", "Neither"]
         drinksorders=[]
         drinknumbers=[]
@@ -133,14 +104,18 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
             for i in range(0,len(plist)):
                 if drinksorders[i]==0:
                     tip = random.randint(0,20)
+                    totaltips += tip
                     drinkcost = tip+20
                     PlayerMoney[i] -= drinkcost
                     drinksorders[i] += 1
+                    purchaseddrinks +=1
                 elif drinksorders[i]==1 and drinknumbers[i]==2 and PlayerMoney[i]>60:
                     tip = random.randint(0, 20)
+                    totaltips += tip
                     drinkcost = tip + 20
                     PlayerMoney[i] -= drinkcost
                     drinksorders[i] += 1
+                    purchaseddrinks += 1
                 else:
                     drinksorders[i] +=0
             currentaction = [random.choice(choice) for i in range (0,len(plist))]
@@ -208,6 +183,8 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
                     Rplayermoneychanges.append(0)
                     Rcasinomoneychanges.append(rwager[i])
             CasinoRouletteEarn=sum(Rcasinomoneychanges)
+            rouletteprofit += CasinoRouletteEarn
+            rouletteprofit -= sum(Rplayermoneychanges)
             Ccorrectnumber=[]
             for i in range(0,craps_tables):
                 dicerolled=random.randint(1,6)+random.randint(1,6)
@@ -215,13 +192,15 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
             Cplayermoneychanges = []
             Ccasinomoneychanges = []
             for i in range(0,len(cguess)):
-                if cguess[i]== Ccorrectnumber[tablechoice[i]-1] and cwager[i] >= Cminbet:
-                    Cplayermoneychanges.append(craps.payouts(Ccorrectnumber)*cwager[i])
+                if cguess[i] == Ccorrectnumber[tablechoice[i]-1] and cwager[i] >= Cminbet:
+                    Cplayermoneychanges.append(craps.payouts(Ccorrectnumber[tablechoice[i]-1])*cwager[i])
                     Ccasinomoneychanges.append(0)
                 else:
                     Cplayermoneychanges.append(0)
                     Ccasinomoneychanges.append(cwager[i])
             CasinoCrapsEarn=sum(Ccasinomoneychanges)
+            crapsprofit += CasinoCrapsEarn
+            crapsprofit -= sum(Cplayermoneychanges)
             TCasinoNightChange = CasinoRouletteEarn+CasinoCrapsEarn
             casinocash += TCasinoNightChange
             for i in range(0,len(plist)):
@@ -237,13 +216,66 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
     casinocashprofit = casinocash-casinoday1cash
     employeeearnings = 0.005*casinocashprofit*nemployees
     casinocashprofit -= employeeearnings
-    return(casinocashvector)
+    if returntype=="Graph":
+        return(casinocashvector)
+    elif returntype=="Tips":
+        print("There were "+str(purchaseddrinks)+" drinks purchased.")
+        return(totaltips)
+    elif returntype=="Game Profit":
+        return([crapsprofit,rouletteprofit])
+    else:
+        return(casinocashprofit)
 
 
 
-test = CasinoSimulation(1000,ncust,casinostartcash,barmen,roulette_tables,craps_tables)
-print(test)
+test1 = CasinoSimulation(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,"Casino")
+print(test1)
 
-x_series = [i for i in range(0,1000)]
-plt.plot(x_series,test)
-plt.show()
+#test = CasinoSimulation(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,"Graph")
+#x_series = [i for i in range(0,Nights)]
+#plt.plot(x_series,test)
+#plt.show()
+
+rouletteorcraps = CasinoSimulation(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,"Game Profit")
+print(rouletteorcraps)
+
+
+bartips = CasinoSimulation(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,"Tips")
+print(bartips)
+#print(bartips/Nights)
+#print((bartips/Nights)/barmen)
+
+
+
+
+'''
+1000 nights profit: $429,068,046.24.
+
+Bonus #1: Should the casino invest more in craps or roulette?
+
+ANSWER: The roulette table profits over 1000 nights is $422,239,497. For craps, it is $96,236,049.28. It's safe to
+say that roulette is the better investment at this point.
+
+Bonus #2: How much tips do barmen usually get?
+
+ANSWER: 4 barmen received $1,500,505 in 1000 nights. That is $1,500.51 per night. Which means each bartender
+makes about 375.13 in tips each night. The average tip amount was $10.
+
+Bonus #3: How far can they increase or decrease the amount you win on a correct bet in craps and roulette?
+
+ANSWER: For increase, only to the actual odds. For roulette, a payoff of 37 to 1 is when the casino make expected
+profit of 0. For craps, it's when the same type but, i.e. for a payout of betting on 2, the payout would be
+36 times the wager. With a sim, there's no way to determine when players stop playing based on payoff structure.
+
+Bonus #4: Should there be more bachelors?
+
+Answer: With 10%, the casino profit is $296,931,893.48 and that is with free money of $200. With 20% bachelors
+(the new player percentage dropped to 30%), the casino profit is $436,424,716.44. At 30%, the profit is
+$1,023,394,530.78. At 40% bachelors, the profit is $277,429,035.96. This would means that the casino
+should attract more bachelors, but only until around 30%. If the assumption is that the returning player
+percentage stays at 50%, the casino certainly wants more bachelors than regular new players.
+
+Now to changing the free budget. Let's hold the bachelor percentage at 30%. By doing this, we can try
+to find the max combination for the casino. Increasing the budget to $300 increases the profit to the casino.
+Decreasing the budget to $100 also decreases the profit. Increasing the amount does seem to help certainly.
+'''
