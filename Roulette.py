@@ -48,7 +48,6 @@ def SpinTheWheel(bets,okbet,dollas):
         print(winningsoverall)
 
 def SimulateGame(numbers,money):
-    Checking=[]
     Checking=AboveMinimum(money)
     SpinTheWheel(numbers,Checking,money)
 

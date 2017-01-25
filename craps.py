@@ -74,3 +74,6 @@ def RollTheDices(guesses,wagers):
         print(winningsoverall)
         return(winningsoverall)
 
+def SimulateGame(guesses,wagers):
+    out=RollTheDices(guesses,wagers)
+    return(out)
