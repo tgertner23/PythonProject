@@ -1,19 +1,5 @@
 import random
 import craps
-from matplotlib import pyplot as plt
-
-#Setting the parameters
-Nights=1000
-roulette_tables=10
-craps_tables=10
-barmen=4
-bartender_wage = 200
-casinostartcash=50000
-ncust=100
-pctreturn=0.5
-pctbach=0.1
-pctnew=0.4
-freebudget=200
 
 
 #defining the class of customer
@@ -43,7 +29,7 @@ class New(Customer):
 class Bachelor(Customer):
     @property
     def assignchips(self):
-        chips = random.randint(200,500)+freebudget
+        chips = random.randint(200,500)
         return(chips)
 # Creates a list of players with the number of players set earlier
 def CreatePlayers(nplayers):
@@ -52,9 +38,9 @@ def CreatePlayers(nplayers):
         playerlist.append("Player"+str(i+1))
     return(playerlist)
 #Taking the list of players and determining their type. Type determined by the percentages of each type
-def PlayerType(listofplayers):
-    rnumb=pctreturn*100
-    bnumb=pctbach*100
+def PlayerType(listofplayers,probreturn,probbach):
+    rnumb=probreturn*100
+    bnumb=probbach*100
     ptype = []
     # generates a random number for each player that is the basis for the type
     #creates a list of types (R,B,or N). Also alters the input to have class involved
@@ -73,10 +59,13 @@ def PlayerType(listofplayers):
     return(ptype)
 #Takes a list of players that have a class assigned and assigns the number of chips to the player
 #returns a list
-def PlayerChips(listofplayers):
+def PlayerChips(listofplayers,typesofplayers,bachelorbudget):
     cashcash=[]
     for i in range(0,len(listofplayers)):
-        cashcash.append(listofplayers[i].assignchips)
+        if typesofplayers[i]=="B":
+            cashcash.append(listofplayers[i].assignchips+bachelorbudget)
+        else:
+            cashcash.append(listofplayers[i].assignchips)
     return(cashcash)
 #Roulette minimum bets list
 RMinchoices=[50,100,200]
@@ -97,7 +86,7 @@ def ChooseATable(roulettetables,crapstables,actions):
 
 #The main function using inputs of number of nights, the number of players, the casino starting cash,
 # the number of bartenders, & the number of craps and roulette tables.
-def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
+def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps,freebachelorbudget,pctr,pctb):
     #setting the variable for the number of tips earned that can be used later for a bonus question
     global totaltips
     totaltips=0
@@ -122,13 +111,13 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
         #new list of player for each night
         plist=CreatePlayers(pnumber)
         #determines the types for each new player
-        playertypes=PlayerType(plist)
+        playertypes=PlayerType(plist,pctr,pctb)
         #how many bachelors are there?
         numbachelors=playertypes.count("B")
         #casino loses the free budget for each bachelor
-        casinocash -= (freebudget*numbachelors)
+        casinocash -= (freebachelorbudget*numbachelors)
         #determines player money
-        PlayerMoney = PlayerChips(plist)
+        PlayerMoney = PlayerChips(plist,playertypes,freebachelorbudget)
         #total player money for the night at the start
         #actions (or games) played per night.
         actionspernight = 40
@@ -227,7 +216,7 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
                     cguess.append(random.randint(2,12))
             #For each table, we randomly generate the correct number for roulette
             Rcorrectnumber=[]
-            for i in range(0,roulette_tables):
+            for i in range(0,nroulette):
                 Rcorrectnumber.append(random.randint(0,36))
             #Money changes from roulette
             Rplayermoneychanges = []
@@ -252,7 +241,7 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
             #same thing for craps now with the correct number list
             Ccorrectnumber=[]
             #generates the number by picking two random numbers between 1 and 6 that are summed
-            for i in range(0,craps_tables):
+            for i in range(0,ncraps):
                 dicerolled=random.randint(1,6)+random.randint(1,6)
                 Ccorrectnumber.append(dicerolled)
             #The money changes for craps, which works the same way as the roulette money changes did
@@ -293,18 +282,14 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps):
     #returns the casino cash list but the global variables can still be printed later
     return(casinocashvector)
 
-#runs the simulation based on set parameters and then plots the profits over time
-Q4sim = CasinoSimulation(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables)
-x_series = [i for i in range(0,Nights)]
-plt.plot(x_series,Q4sim)
-plt.show()
 #for the bonuses
 #the amount of tips earn by the 4 bartenders over the nights
-print(totaltips)
+def bartendertips(nights,customers,cashstart,bartenders,rtables,ctables,freebachelorbudget,pctr,pctb):
+    CasinoSimulation(nights,customers,cashstart,bartenders,rtables,ctables,freebachelorbudget,pctr,pctb)
+    return(totaltips)
 
 #the profits from the craps tables
-print(crapsprofit)
-#the profits from the roulette tables
-print(rouletteprofit)
-
-#roulette makes a higher profit (due to the lower payoff given the probabilities)
+def gameprofits(nights,customers,cashstart,bartenders,rtables,ctables,freebachelorbudget,pctr,pctb):
+    CasinoSimulation(nights, customers, cashstart, bartenders, rtables, ctables,freebachelorbudget,pctr,pctb)
+    print("The first number is the roulette profit. The second is the craps profit.")
+    return([rouletteprofit,crapsprofit])

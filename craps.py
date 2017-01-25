@@ -98,7 +98,6 @@ def RollTheDices(guesses,wagers):
         return(winningsoverall)
 #final command
 def SimulateGame(guesses,wagers):
-
     nguess = []
     #checks if the bets are ok
     okbet = AboveMinimum(wagers)
