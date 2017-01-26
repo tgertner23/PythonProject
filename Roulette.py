@@ -1,74 +1,77 @@
 import random
+#This is used to fix the random generator so we can test the output
 random.seed(3456)
-#boolian check on the wager. if above the min, output is True. if below, output is False
-def AboveMinimum(dollas):
+
+#Boolian check on the wager (amount of money bet).
+#If above the min, output is True. If below, output is False
+def AboveMinimum(dollars):
     boollist = []
     minimumbets = 90
-    for i in range(0,len(dollas)):
-
-        if (dollas[i]>minimumbets):
+    for i in range(0,len(dollars)):
+        if (dollars[i] > minimumbets):
             boollist.append(True)
         else:
             boollist.append(False)
     return(boollist)
 
 #Main function
-def SpinTheWheel(bets,dollas):
-    #determines the random number the ball lands on
-    landing=random.randint(0,36)
+def SpinTheWheel(guesses,dollars):
+    #Determines the random number the ball lands on
+    landing = random.randint(0, 36)
     #Dealer tells us what's happening and where the ball lands
     print("Spinning the wheel...")
-    print("Ball lands on "+str(landing))
-    #count of how many people were correct
-    numwinners=bets.count(landing)
-    #in the case of no winners
+    print("Ball lands on " + str(landing))
+    #Count of how many people win
+    numwinners = guesses.count(landing)
+
+    #In the case of no winners
     if (numwinners==0):
         playerwinnings = []
-        #the dealer fills the players hearts with shame
+        #The dealer states that no one has won
         print("There are no winners")
-        #casino wins the wagers
-        casinowinnings=sum(dollas)
-        #player winnings will be a list of zeroes
-        for i in range(0,len(dollas)):
+        #Casino wins all the wagers
+        casinowinnings = sum(dollars)
+        #Player winnings will be a list of zeroes
+        for i in range(0, len(dollars)):
             playerwinnings.append(0)
-        #output
-        winningsoverall=[casinowinnings,playerwinnings]
+        #Output
+        winningsoverall = [casinowinnings, playerwinnings]
         print(winningsoverall)
-    #if some lucky guy wins
+
+    #In the other case (at least one winner)
     else:
         #We find our how many were correct
         print(str(numwinners) +" bet(s) got it this round.")
         playerwinnings = []
         casinopwinnings = []
-        #loop for all players
-        for i in range(0, len(dollas)):
-            #if they are correct in their guess
-            if (bets[i]==landing):
-                #they win 30 times the wager while the casino wins nothing
-                playerwinnings.append(30*dollas[i])
+        #Loop for all players
+        for i in range(0, len(dollars)):
+            #If they are correct in their guess
+            if (guesses[i]==landing):
+                #They win 30 times the wager while the casino wins nothing
+                playerwinnings.append(30*dollars[i])
                 casinopwinnings.append(0)
             else:
-                #if they are wrong, the casino wins their wager and they get nothing
+                #If they are wrong, the casino wins their wager and they get nothing
                 playerwinnings.append(0)
-                casinopwinnings.append(dollas[i])
-        #casino winnings is the total of their list
-        casinowinnings=sum(casinopwinnings)
-        #output
-        winningsoverall=[casinowinnings,playerwinnings]
+                casinopwinnings.append(dollars[i])
+        #Casino winnings is the total of their list
+        casinowinnings = sum(casinopwinnings)
+        #Output
+        winningsoverall = [casinowinnings, playerwinnings]
         print(winningsoverall)
 
-#final function
-def SimulateGame(numbers,money):
-    #running the boolian check
-    Checking=AboveMinimum(money)
-    #creating new bets so that the wagers below the min are changed to a number outside the possible range
-    #in this case, it is 37. this way, this money is lost and the players are not considered winners
-    newbets=[]
+#Final function
+def SimulateGame(numbers, money):
+    #Running the boolian check
+    Checking = AboveMinimum(money)
+    #Creating new bets so that the wagers below the min are changed to a number outside the possible range
+    #In this case, it is 37. This way, this money is lost and the players are not considered winners
+    newguess = []
     for i in range(0, len(money)):
         if (Checking[i]==True):
-            newbets.append(numbers[i])
+            newguess.append(numbers[i])
         else:
-            newbets.append(37)
-    #spinning the wheel
-    SpinTheWheel(newbets,money)
+            newguess.append(37)
+    SpinTheWheel(newguess, money)
 
