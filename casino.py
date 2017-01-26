@@ -47,7 +47,7 @@ def PlayerType(listofplayers, probreturn, probbach):
     for i in range(0, len(listofplayers)):
         rando = random.randint(1,100)
 
-        if rando < rnumb:
+        if rando <= rnumb:
             listofplayers[i] = Returner(str(listofplayers[i]))
             ptype.append("R")
         elif rando > (100-bnumb):
@@ -59,7 +59,7 @@ def PlayerType(listofplayers, probreturn, probbach):
     return(ptype)
 #Takes a list of players that have a class assigned and assigns the number of chips to the player
 #Returns a list
-def PlayerChips(listofplayers,typesofplayers,bachelorbudget):
+def PlayerChips(listofplayers, typesofplayers, bachelorbudget):
     cashcash = []
     for i in range(0,len(listofplayers)):
         if typesofplayers[i]=="B":
@@ -126,16 +126,16 @@ def CasinoSimulation(nights, pnumber, casinoday1cash, nbartend, nroulette, ncrap
         #Loop run each round determining if the customer orders drinks or not
         for i in range(0,len(plist)):
             #In this case, it is between 1 and 4
-            drinkornot=random.randint(1,roundsbetweendrinks)
+            drinkornot = random.randint(1,roundsbetweendrinks)
             #There is a 25% chance that the player purchases a drink so if the random number is four, they will order
-            if drinkornot==4 and PlayerMoney[i]>60:
+            if drinkornot==4 and PlayerMoney[i] > 60:
                 #The player orders one or two drinks
-                numofdrinks=random.randint(1,2)
+                numofdrinks = random.randint(1,2)
                 purchaseddrinks += numofdrinks
                 #The tip is anything from zero to twenty
-                tip=random.randint(0,20)
+                tip = random.randint(0,20)
                 #The cost of the drink without the tip is twenty times the number of drinks
-                drinkcost=20*numofdrinks
+                drinkcost = 20*numofdrinks
                 #Casino gets the cost of the drink but not the tip
                 casinocash += drinkcost
                 #The player pays the cost of the drinks and the tip
@@ -181,14 +181,14 @@ def CasinoSimulation(nights, pnumber, casinoday1cash, nbartend, nroulette, ncrap
             for i in range(0,len(plist)):
                 if currentaction[i] != "Craps":
                     cwager.append(0)
-                elif playertypes[i] == "R":
+                elif playertypes[i]=="R":
                     if PlayerMoney[i] < Cminbet:
                         cwager.append(PlayerMoney[i])
                     else:
                         cwager.append(Cminbet)
-                elif playertypes[i] == "N":
+                elif playertypes[i]=="N":
                     Cnewbwagerpct = random.uniform(0, (1 / 3))
-                    cwager.append(int(PlayerMoney[i] * Cnewbwagerpct))
+                    cwager.append(int(PlayerMoney[i]*Cnewbwagerpct))
                 else:
                     cwager.append(int(random.uniform(0, PlayerMoney[i])))
             #What the players choose as their guesses (r for roulette, c for craps)
@@ -220,7 +220,7 @@ def CasinoSimulation(nights, pnumber, casinoday1cash, nbartend, nroulette, ncrap
                 #If the guess is correct for the specific table chosen and the bet is valid
                 if rguess[i] == Rcorrectnumber[tablechoice[i]-1] and rwager[i] >= Rminbet:
                     #Player wins 30 times his wager
-                    Rplayermoneychanges.append(30 * rwager[i])
+                    Rplayermoneychanges.append(30*rwager[i])
                     #Casino therefore pays out the amount bet
                     Rcasinomoneychanges.append(-(30*rwager[i]))
                 else:
@@ -236,7 +236,7 @@ def CasinoSimulation(nights, pnumber, casinoday1cash, nbartend, nroulette, ncrap
             Ccorrectnumber = []
             #Generates the number by picking two random numbers between 1 and 6 that are summed
             for i in range(0,ncraps):
-                dicerolled = random.randint(1,6)+random.randint(1,6)
+                dicerolled = random.randint(1,6) + random.randint(1,6)
                 Ccorrectnumber.append(dicerolled)
             #The money changes for craps, which works the same way as the roulette money changes did
             Cplayermoneychanges = []
