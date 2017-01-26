@@ -120,19 +120,37 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps,fr
         PlayerMoney = PlayerChips(plist,playertypes,freebachelorbudget)
         #total player money for the night at the start
         #actions (or games) played per night.
-        actionspernight = 40
+        actionspernight = 20
         #the choice a player makes at each action can be sitting out a game
         choice = ["Roulette", "Craps", "Neither"]
         #drink orders are the number of drinks actually ordered
         #drink numbers are the number of drinks that the player should purchase in the night
-        drinksorders=[]
+        roundsbetweendrinks=actionspernight/5
+        for i in range(0,len(plist)):
+            drinkornot=random.randint(1,roundsbetweendrinks)
+            if drinkornot==4 and PlayerMoney[i]>60:
+                numofdrinks=random.randint(1,2)
+                purchaseddrinks += numofdrinks
+                tip=random.randint(0,20)
+                drinkcost=20*numofdrinks
+                casinocash += drinkcost
+                PlayerMoney[i] -= drinkcost
+                PlayerMoney[i] -= tip
+                totaltips += tip
+            else:
+                purchaseddrinks += 0
+
+
+
+
+        '''drinksorders=[]
         drinknumbers=[]
         for i in range(0,len(plist)):
             drinksorders.append(0)
             drinknumbers.append(random.randint(1,2))
-        #run a loop for each action (or round)
+        #run a loop for each action (or round)'''
         for i in range(0,actionspernight):
-            #for each player, in round 1, they purchase a drink. tip is randomly determined. cost is 20
+            ''''#for each player, in round 1, they purchase a drink. tip is randomly determined. cost is 20
             for i in range(0,len(plist)):
                 if drinksorders[i]==0:
                     tip = random.randint(0,20)
@@ -152,7 +170,9 @@ def CasinoSimulation(nights, pnumber,casinoday1cash,nbartend,nroulette,ncraps,fr
                 # otherwise, they do not buy another drink
                 else:
                     drinksorders[i] +=0
-            #determines the current action for each player from the previous list of choices
+                '''
+
+            # determines the current action for each player from the previous list of choices
             currentaction = [random.choice(choice) for i in range (0,len(plist))]
             #which table the player goes to.
             tablechoice=ChooseATable(nroulette,ncraps,currentaction)
