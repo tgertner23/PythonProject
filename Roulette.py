@@ -8,7 +8,7 @@ def AboveMinimum(dollars):
     boollist = []
     minimumbets = 90
     for i in range(0,len(dollars)):
-        if (dollars[i] > minimumbets):
+        if (dollars[i] >= minimumbets):
             boollist.append(True)
         else:
             boollist.append(False)
