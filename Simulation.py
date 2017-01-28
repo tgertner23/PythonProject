@@ -34,14 +34,17 @@ pctbach = 0.1
 pctnew = 0.4
 freebudget = 200
 #Simulation of casino based on parameters given
+random.seed(3456)
 BigSim = casino.CasinoSimulation(Nights, ncust, casinostartcash, barmen, roulette_tables, craps_tables, freebudget, pctreturn, pctbach)
 #Graphing the money changes
 x_series = [i for i in range(0,Nights)]
 plt.plot(x_series, BigSim)
 plt.show()
 #Which makes a larger profit? Roulette or craps?
+random.seed(3456)
 Bonus1 = casino.gameprofits(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,freebudget,pctreturn,pctbach)
 print(Bonus1)
 #The amount of tips a bartender makes
+random.seed(3456)
 Bonus2 = casino.bartendertips(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,freebudget,pctreturn,pctbach)
 print(Bonus2)
