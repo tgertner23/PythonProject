@@ -37,7 +37,7 @@ def AboveMinimum(dollars):
     #Loop for each player
     for i in range(0, len(dollars)):
         #If the bet is above the min, it returns TRUE
-        if (dollars[i] > minimumbets):
+        if (dollars[i] >= minimumbets):
             boollist.append(True)
         #If not, it is an invalid bet and receives the FALSE response
         else:
