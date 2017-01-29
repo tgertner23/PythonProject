@@ -22,6 +22,7 @@ crapbets = [50, 70, 30, 40, 50]
 craps.SimulateGame(crapguesses, crapbets)
 craps.SimulateGame(crapguesses, crapbets)
 
+#R
 listofrolls=[]
 for i in range(0,1000):
     listofrolls.append(craps.Dices())
