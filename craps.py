@@ -37,7 +37,7 @@ def AboveMinimum(dollars):
     #Loop for each player
     for i in range(0, len(dollars)):
         #If the bet is above the min, it returns TRUE
-        if (dollars[i] > minimumbets):
+        if (dollars[i] >= minimumbets):
             boollist.append(True)
         #If not, it is an invalid bet and receives the FALSE response
         else:
@@ -101,6 +101,8 @@ def RollTheDices(guesses, wagers):
         print(winningsoverall)
         return(winningsoverall)
 
+
+
 #Final command
 def SimulateGame(guesses, wagers):
     nguess = []
@@ -118,3 +120,21 @@ def SimulateGame(guesses, wagers):
     #Run the roll the dices based on the new guesses (nguess)
     out=RollTheDices(nguess, wagers)
     return(out)
+
+#Testing that casino makes 10% profit from payoffs
+#Craps guesses
+crapguesses = [7, 9, 2, 11, 3]
+#The wagers for craps
+crapbets = [50, 70, 30, 40, 50]
+#Setting the player earnings to 0 and chips too
+playerearnings = 0
+chips = 0
+#Running the code 10000 times
+for i in range(0, 10000):
+    #Chips is the sum of the wagers for each simulation
+    chips += sum(crapbets)
+    profittest=SimulateGame(crapguesses,crapbets)
+    #The player earnings equals the sum of the earnings for each player
+    playerearnings += sum(profittest[1])
+#This number should be close to 0.9
+print(playerearnings/chips)
