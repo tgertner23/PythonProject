@@ -14,8 +14,6 @@ allamounts = [10, 85, 120, 65, 150, 122]
 Roulette.SimulateGame(allbets, allamounts)
 Roulette.SimulateGame(allbets, allamounts)
 
-
-
 #Craps guesses
 crapguesses = [7, 9, 2, 11, 3]
 #The wagers for craps
