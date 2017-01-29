@@ -60,4 +60,3 @@ print(Bonus1)
 random.seed(3456)
 Bonus2 = casino.bartendertips(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,freebudget,pctreturn,pctbach)
 print(Bonus2)
-
