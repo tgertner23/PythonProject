@@ -22,7 +22,7 @@ crapbets = [50, 70, 30, 40, 50]
 craps.SimulateGame(crapguesses, crapbets)
 craps.SimulateGame(crapguesses, crapbets)
 
-#R
+#Plotting the probabilities of outcomes for craps
 listofrolls=[]
 for i in range(0,1000):
     listofrolls.append(craps.Dices())
@@ -60,3 +60,4 @@ print(Bonus1)
 random.seed(3456)
 Bonus2 = casino.bartendertips(Nights,ncust,casinostartcash,barmen,roulette_tables,craps_tables,freebudget,pctreturn,pctbach)
 print(Bonus2)
+
